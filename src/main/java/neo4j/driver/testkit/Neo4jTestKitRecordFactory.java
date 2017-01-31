@@ -22,7 +22,7 @@ public class Neo4jTestKitRecordFactory {
 			values.add(value);
 		}
 
-		return new InternalRecord(keys, (Value[]) values.toArray());
+		return new InternalRecord(keys, values.toArray(new Value[values.size()]));
 	}
 
 }
