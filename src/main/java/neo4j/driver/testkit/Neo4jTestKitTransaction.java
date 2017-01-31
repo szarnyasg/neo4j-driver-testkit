@@ -1,5 +1,6 @@
 package neo4j.driver.testkit;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.neo4j.driver.v1.Record;
@@ -47,14 +48,12 @@ public class Neo4jTestKitTransaction implements org.neo4j.driver.v1.Transaction 
 
     @Override
     public StatementResult run(String statementTemplate) {
-        // TODO Auto-generated method stub
-        return null;
+        return run(statementTemplate, Collections.emptyMap());
     }
 
     @Override
     public StatementResult run(Statement statement) {
-        // TODO Auto-generated method stub
-        return null;
+        return run(statement.text(), Collections.emptyMap());
     }
 
     @Override
