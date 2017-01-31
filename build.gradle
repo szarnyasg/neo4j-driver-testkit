@@ -1,0 +1,39 @@
+group = 'neo4j-driver-testkit'
+version = '0.1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+jar {
+  from sourceSets.main.allJava
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+  jcenter()
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+}
+
+ext {
+  neo4jDriverVersion = '1.1.1'
+  neo4jVersion = '3.1.1'
+  junitVersion = '4.12'
+}
+
+dependencies {
+  compile group: 'org.neo4j.driver', name: 'neo4j-java-driver', version: neo4jDriverVersion
+  compile group: 'org.neo4j', name: 'neo4j-kernel', version: neo4jVersion
+  compile group: 'org.neo4j', name: 'neo4j-io', version: neo4jVersion
+  compile group: 'org.neo4j', name: 'neo4j-kernel', version: neo4jVersion, classifier: 'tests'
+  compile group: 'org.neo4j', name: 'neo4j-io', version: neo4jVersion, classifier: 'tests'
+  testCompile group: 'junit', name: 'junit', version: junitVersion
+}
