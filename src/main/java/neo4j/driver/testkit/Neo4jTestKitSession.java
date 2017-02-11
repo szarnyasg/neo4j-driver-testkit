@@ -1,5 +1,6 @@
 package neo4j.driver.testkit;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.neo4j.driver.v1.AccessMode;
@@ -29,23 +30,25 @@ public class Neo4jTestKitSession implements Session {
     }
 
     @Override
-    public StatementResult run(String statementTemplate, Value parameters) {
-        return null;
-    }
-
-    @Override
     public StatementResult run(String statementTemplate, Map<String, Object> statementParameters) {
-        return null;
+        final Result internalResult = gds.execute(statementTemplate, statementParameters);
+        final Neo4jTestKitStatementResult driverResult = new Neo4jTestKitStatementResult(internalResult);
+        return driverResult;
     }
 
     @Override
     public StatementResult run(String statementTemplate) {
-        return null;
+        return run(statementTemplate, Collections.emptyMap());
+    }
+
+    @Override
+    public StatementResult run(String statementTemplate, Value parameters) {
+        return run(statementTemplate, parameters.asMap());
     }
 
     @Override
     public StatementResult run(String statementTemplate, Record statementParameters) {
-        return null;
+        return run(statementTemplate, statementParameters.asMap());
     }
 
     @Override
@@ -64,7 +67,7 @@ public class Neo4jTestKitSession implements Session {
     @Override
     public Transaction beginTransaction() {
         org.neo4j.graphdb.Transaction transaction = gds.beginTx();
-		return new Neo4jTestKitTransaction(gds, transaction);
+		return new Neo4jTestKitTransaction(this, transaction);
     }
 
     @Override
@@ -84,6 +87,10 @@ public class Neo4jTestKitSession implements Session {
 
     @Override
     public void close() {
+    }
+
+    public void registerQuery() {
+
     }
 
 }

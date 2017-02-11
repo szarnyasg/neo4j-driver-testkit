@@ -1,6 +1,5 @@
 package neo4j.driver.testkit;
 
-import java.util.Collections;
 import java.util.Map;
 
 import org.neo4j.driver.v1.Record;
@@ -8,19 +7,15 @@ import org.neo4j.driver.v1.Statement;
 import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.driver.v1.Value;
 import org.neo4j.driver.v1.types.TypeSystem;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
-
-import neo4j.driver.testkit.data.Neo4jTestKitStatementResult;
 
 public class Neo4jTestKitTransaction implements org.neo4j.driver.v1.Transaction {
 
-	final GraphDatabaseService gds;
+	final Neo4jTestKitSession session;
 	final Transaction internalTransaction;
 
-	public Neo4jTestKitTransaction(GraphDatabaseService gds, Transaction internalTransaction) {
-		this.gds = gds;
+	public Neo4jTestKitTransaction(Neo4jTestKitSession session, Transaction internalTransaction) {
+		this.session = session;
 		this.internalTransaction = internalTransaction;
 	}
 
@@ -30,30 +25,28 @@ public class Neo4jTestKitTransaction implements org.neo4j.driver.v1.Transaction 
     }
 
     @Override
+    public StatementResult run(String statementTemplate, Map<String, Object> statementParameters) {
+        return session.run(statementTemplate, statementParameters);
+    }
+
+    @Override
     public StatementResult run(String statementTemplate, Value parameters) {
-    	return run(statementTemplate, parameters.asMap());
+        return session.run(statementTemplate, parameters);
     }
 
     @Override
     public StatementResult run(String statementTemplate, Record statementParameters) {
-        return run(statementTemplate, statementParameters.asMap());
-    }
-
-    @Override
-    public StatementResult run(String statementTemplate, Map<String, Object> statementParameters) {
-    	final Result internalResult = gds.execute(statementTemplate, statementParameters);
-		final Neo4jTestKitStatementResult driverResult = new Neo4jTestKitStatementResult(internalResult);
-		return driverResult;
+        return session.run(statementTemplate, statementParameters);
     }
 
     @Override
     public StatementResult run(String statementTemplate) {
-        return run(statementTemplate, Collections.emptyMap());
+        return session.run(statementTemplate);
     }
 
     @Override
     public StatementResult run(Statement statement) {
-        return run(statement.text(), Collections.emptyMap());
+        return session.run(statement.text());
     }
 
     @Override
