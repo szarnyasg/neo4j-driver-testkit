@@ -2,7 +2,6 @@ package neo4j.driver.testkit;
 
 import org.neo4j.driver.v1.AccessMode;
 import org.neo4j.driver.v1.Driver;
-import org.neo4j.driver.v1.Session;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.test.TestGraphDatabaseFactory;
 
@@ -19,18 +18,17 @@ public class Neo4jTestKitDriver implements Driver {
     }
 
     @Override
-    public Session session() {
+    public Neo4jTestKitSession session() {
         return session(AccessMode.WRITE);
     }
 
     @Override
-    public Session session(AccessMode mode) {
+    public Neo4jTestKitSession session(AccessMode mode) {
         return new Neo4jTestKitSession(gds, mode);
     }
 
     @Override
     public void close() {
-
     }
 
 }

@@ -1,6 +1,7 @@
 package neo4j.driver.testkit;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.neo4j.driver.v1.AccessMode;
@@ -14,11 +15,19 @@ import org.neo4j.driver.v1.types.TypeSystem;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Result;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Multisets;
+
+import neo4j.driver.testkit.data.ChangeSet;
 import neo4j.driver.testkit.data.Neo4jTestKitStatementResult;
 
 public class Neo4jTestKitSession implements Session {
 
     final GraphDatabaseService gds;
+    final Map<String, String> querySpecifications = new HashMap<>();
+    final Map<String, Multiset<Record>> queryResults = new HashMap<>();
+    final Map<String, Multiset<Record>> deltas = new HashMap<>();
 
     public Neo4jTestKitSession(GraphDatabaseService gds, AccessMode mode) {
         this.gds = gds;
@@ -89,8 +98,36 @@ public class Neo4jTestKitSession implements Session {
     public void close() {
     }
 
-    public void registerQuery() {
+    public ChangeSet registerQuery(String queryName, String querySpecification) {
+    	if (querySpecifications.containsKey(queryName)) {
+    		throw new IllegalStateException("Query " + queryName + " is already registered.");
+    	}
 
+    	querySpecifications.put(queryName, querySpecification);
+    	queryResults.put(queryName, HashMultiset.create());
+    	return getDeltas(queryName);
+    }
+
+    public ChangeSet getDeltas(String queryName) {
+    	final String querySpecification = querySpecifications.get(queryName);
+
+    	final StatementResult statementResult = run(querySpecification);
+
+    	final Multiset<Record> currentResults = queryResults.get(queryName);
+    	final Multiset<Record> newResults = HashMultiset.create();
+    	while (statementResult.hasNext()) {
+    		final Record record = statementResult.next();
+    		newResults.add(record);
+    	}
+
+    	final Multiset<Record> positiveChanges = Multisets.difference(newResults, currentResults);
+    	final Multiset<Record> negativeChanges = Multisets.difference(currentResults, newResults);
+
+    	queryResults.put(queryName, newResults);
+    	System.out.println("current> " + currentResults);
+    	System.out.println("  new  > " + newResults);
+
+    	return new ChangeSet(positiveChanges, negativeChanges);
     }
 
 }

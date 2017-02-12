@@ -3,82 +3,44 @@ package neo4j.driver.testkit.test;
 import static org.neo4j.driver.v1.Values.parameters;
 
 import org.junit.Test;
-import org.neo4j.driver.v1.Driver;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Session;
-import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.driver.v1.Transaction;
+import org.neo4j.driver.v1.Value;
 
 import neo4j.driver.testkit.Neo4jTestKitDriver;
+import neo4j.driver.testkit.Neo4jTestKitSession;
+import neo4j.driver.testkit.data.ChangeSet;
 
 public class Neo4jDriverTest {
 
 	@Test
 	public void test1() throws Exception {
-		try (Driver driver = new Neo4jTestKitDriver()) {
-			try (Session session = driver.session()) {
-                try (Transaction tx = session.beginTransaction()) {
-                    StatementResult result = tx.run("CREATE (n) RETURN n");
-                    while (result.hasNext()) {
-                        System.out.println(result.next());
-                    }
-                    tx.success();
-                }
+		try (Neo4jTestKitDriver driver = new Neo4jTestKitDriver()) {
+			try (Neo4jTestKitSession session = driver.session()) {
+				final String PERSONS_QUERY = "persons";
 
+				final ChangeSet changeSet1 = session.registerQuery(PERSONS_QUERY, "MATCH (a:Person) RETURN a");
+				System.out.println(changeSet1);
+				System.out.println();
 
-			    try (Transaction tx = session.beginTransaction()) {
-					tx.run("CREATE (a:Person {name: $name, title: $title})",
-							parameters("name", "Arthur", "title", "King"));
-					tx.success();
-				}
-
-				try (Transaction tx = session.beginTransaction()) {
-					StatementResult result = tx.run( //
-							"MATCH (a:Person) WHERE a.name = $name " + //
-									"RETURN a.name AS name, a.title AS title", //
-							parameters("name", "Arthur"));
-					while (result.hasNext()) {
-						Record record = result.next();
-						System.out.println(
-								String.format("%s %s", record.get("title").asString(), record.get("name").asString()));
-					}
-				}
+				runUpdate(session, PERSONS_QUERY, "CREATE (a:Person {name: $name, title: $title})",         parameters("name", "Arthur", "title", "King"));
+				runUpdate(session, PERSONS_QUERY, "CREATE (a:Person {name: $name, title: $title})",         parameters("name", "Arthur", "title", "King"));
+				runUpdate(session, PERSONS_QUERY, "MATCH (a:Person {name: $name, title: $title}) DELETE a", parameters("name", "Arthur", "title", "King"));
 			}
 		}
 	}
 
-//    @Test
-//    public void test2() throws Exception {
-//        try (Driver driver = GraphDatabase.driver("bolt://localhost", AuthTokens.none())) {
-//            try (Session session = driver.session()) {
-//                try (Transaction tx = session.beginTransaction()) {
-//                    StatementResult result = tx.run("CREATE (n) RETURN n");
-//                    while (result.hasNext()) {
-//                        Record next = result.next();
-//                        System.out.println(next);
-//                    }
-//                    tx.success();
-//                }
-//
-//                try (Transaction tx = session.beginTransaction()) {
-//                    tx.run("CREATE (a:Person {name: $name, title: $title})",
-//                            parameters("name", "Arthur", "title", "King"));
-//                    tx.success();
-//                }
-//
-//                try (Transaction tx = session.beginTransaction()) {
-//                    StatementResult result = tx.run( //
-//                            "MATCH (a:Person) WHERE a.name = $name " + //
-//                                    "RETURN a.name AS name, a.title AS title", //
-//                            parameters("name", "Arthur"));
-//                    while (result.hasNext()) {
-//                        Record record = result.next();
-//                        System.out.println(
-//                                String.format("%s %s", record.get("title").asString(), record.get("name").asString()));
-//                    }
-//                }
-//            }
-//        }
-//    }
+	private void runUpdate(Neo4jTestKitSession session, final String PERSONS_QUERY, String statementTemplate,
+			Value parameters) {
+		System.out.println("Running query: " + statementTemplate);
+
+		try (Transaction tx = session.beginTransaction()) {
+			tx.run(statementTemplate, parameters);
+			tx.success();
+		}
+
+		final ChangeSet changeSet = session.getDeltas(PERSONS_QUERY);
+		System.out.println(changeSet);
+		System.out.println();
+	}
 
 }
