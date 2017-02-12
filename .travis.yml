@@ -1,6 +1,8 @@
 language: java
 jdk:
   - oraclejdk8
+install:
+  - scripts/get-driver.sh
 notifications:
   slack:
   on_success: change

@@ -27,11 +27,13 @@ public class ChangeSet {
 
 	@Override
 	public String toString() {
-		return String.format("ChangeSet [\n  positive = %s\n  negative = %s\n]", formatRecords(positive), formatRecords(negative));
+		return String.format("ChangeSet [\n  positive = { %s }\n  negative = { %s }\n]", formatRecords(positive), formatRecords(negative));
 	}
 
 	private String formatRecords(Multiset<Record> records) {
-		return records.stream().map(r -> r.toString() + "@" + Integer.toHexString(r.hashCode())).collect(Collectors.joining(", "));
+		return records.stream() //
+				.map(r -> r.toString()) //
+				.collect(Collectors.joining(", ")); //
 	}
 
 }
