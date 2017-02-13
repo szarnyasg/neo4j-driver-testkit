@@ -1,4 +1,4 @@
-group = 'neo4j-driver-testkit'
+group = 'neo4j-reactive-driver'
 version = '0.0.1-SNAPSHOT'
 
 apply plugin: 'java'
