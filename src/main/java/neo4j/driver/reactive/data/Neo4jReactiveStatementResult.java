@@ -1,4 +1,4 @@
-package neo4j.driver.testkit.data;
+package neo4j.driver.reactive.data;
 
 import java.util.List;
 import java.util.Map;
@@ -10,13 +10,13 @@ import org.neo4j.driver.v1.summary.ResultSummary;
 import org.neo4j.driver.v1.util.Function;
 import org.neo4j.graphdb.Result;
 
-import neo4j.driver.testkit.Neo4jTestKitRecordFactory;
+import neo4j.driver.reactive.Neo4jReactiveRecordFactory;
 
-public class Neo4jTestKitStatementResult implements StatementResult {
+public class Neo4jReactiveStatementResult implements StatementResult {
 
 	final Result result;
 
-	public Neo4jTestKitStatementResult(final Result result) {
+	public Neo4jReactiveStatementResult(final Result result) {
 		this.result = result;
 	}
 
@@ -33,7 +33,7 @@ public class Neo4jTestKitStatementResult implements StatementResult {
 	@Override
 	public Record next() {
 		final Map<String, Object> element = result.next();
-		return Neo4jTestKitRecordFactory.create(element);
+		return Neo4jReactiveRecordFactory.create(element);
 	}
 
 	@Override

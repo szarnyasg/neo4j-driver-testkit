@@ -1,4 +1,4 @@
-package neo4j.driver.testkit.test;
+package neo4j.driver.reactive.test;
 
 import static org.neo4j.driver.v1.Values.parameters;
 
@@ -6,16 +6,16 @@ import org.junit.Test;
 import org.neo4j.driver.v1.Transaction;
 import org.neo4j.driver.v1.Value;
 
-import neo4j.driver.testkit.Neo4jTestKitDriver;
-import neo4j.driver.testkit.Neo4jTestKitSession;
-import neo4j.driver.testkit.data.ChangeSet;
+import neo4j.driver.reactive.Neo4jReactiveDriver;
+import neo4j.driver.reactive.Neo4jReactiveSession;
+import neo4j.driver.reactive.data.ChangeSet;
 
 public class Neo4jDriverTest {
 
 	@Test
 	public void test1() throws Exception {
-		try (Neo4jTestKitDriver driver = new Neo4jTestKitDriver()) {
-			try (Neo4jTestKitSession session = driver.session()) {
+		try (Neo4jReactiveDriver driver = new Neo4jReactiveDriver()) {
+			try (Neo4jReactiveSession session = driver.session()) {
 				final String PERSONS_QUERY = "persons";
 
 				final ChangeSet changeSet1 = session.registerQuery(PERSONS_QUERY, "MATCH (a:Person) RETURN a");
@@ -29,7 +29,7 @@ public class Neo4jDriverTest {
 		}
 	}
 
-	private void runUpdate(Neo4jTestKitSession session, final String PERSONS_QUERY, String statementTemplate,
+	private void runUpdate(Neo4jReactiveSession session, final String PERSONS_QUERY, String statementTemplate,
 			Value parameters) {
 		System.out.println("Running query: " + statementTemplate);
 

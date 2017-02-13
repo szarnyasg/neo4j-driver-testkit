@@ -1,4 +1,4 @@
-package neo4j.driver.testkit;
+package neo4j.driver.reactive;
 
 import java.util.Map;
 
@@ -9,12 +9,12 @@ import org.neo4j.driver.v1.Value;
 import org.neo4j.driver.v1.types.TypeSystem;
 import org.neo4j.graphdb.Transaction;
 
-public class Neo4jTestKitTransaction implements org.neo4j.driver.v1.Transaction {
+public class Neo4jReactiveTransaction implements org.neo4j.driver.v1.Transaction {
 
-	final Neo4jTestKitSession session;
+	final Neo4jReactiveSession session;
 	final Transaction internalTransaction;
 
-	public Neo4jTestKitTransaction(Neo4jTestKitSession session, Transaction internalTransaction) {
+	public Neo4jReactiveTransaction(Neo4jReactiveSession session, Transaction internalTransaction) {
 		this.session = session;
 		this.internalTransaction = internalTransaction;
 	}

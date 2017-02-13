@@ -4,6 +4,6 @@ jdk:
 install:
   - scripts/get-driver.sh
 notifications:
-  slack:
+  slack: ftsrg:ecvIo6H1l9zFO7qSwf3Juz3U
   on_success: change
   on_failure: always

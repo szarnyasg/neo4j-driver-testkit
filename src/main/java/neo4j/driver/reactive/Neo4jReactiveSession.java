@@ -1,4 +1,4 @@
-package neo4j.driver.testkit;
+package neo4j.driver.reactive;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,17 +19,17 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
 
-import neo4j.driver.testkit.data.ChangeSet;
-import neo4j.driver.testkit.data.Neo4jTestKitStatementResult;
+import neo4j.driver.reactive.data.ChangeSet;
+import neo4j.driver.reactive.data.Neo4jReactiveStatementResult;
 
-public class Neo4jTestKitSession implements Session {
+public class Neo4jReactiveSession implements Session {
 
     final GraphDatabaseService gds;
     final Map<String, String> querySpecifications = new HashMap<>();
     final Map<String, Multiset<Record>> queryResults = new HashMap<>();
     final Map<String, Multiset<Record>> deltas = new HashMap<>();
 
-    public Neo4jTestKitSession(GraphDatabaseService gds, AccessMode mode) {
+    public Neo4jReactiveSession(GraphDatabaseService gds, AccessMode mode) {
         this.gds = gds;
     }
 
@@ -41,7 +41,7 @@ public class Neo4jTestKitSession implements Session {
     @Override
     public StatementResult run(String statementTemplate, Map<String, Object> statementParameters) {
         final Result internalResult = gds.execute(statementTemplate, statementParameters);
-        final Neo4jTestKitStatementResult driverResult = new Neo4jTestKitStatementResult(internalResult);
+        final Neo4jReactiveStatementResult driverResult = new Neo4jReactiveStatementResult(internalResult);
         return driverResult;
     }
 
@@ -63,7 +63,7 @@ public class Neo4jTestKitSession implements Session {
     @Override
     public StatementResult run(Statement statement) {
     	final Result internalResult = gds.execute(statement.text());
-    	final Neo4jTestKitStatementResult driverResult = new Neo4jTestKitStatementResult(internalResult);
+    	final Neo4jReactiveStatementResult driverResult = new Neo4jReactiveStatementResult(internalResult);
 
     	return driverResult;
     }
@@ -76,7 +76,7 @@ public class Neo4jTestKitSession implements Session {
     @Override
     public Transaction beginTransaction() {
         org.neo4j.graphdb.Transaction transaction = gds.beginTx();
-		return new Neo4jTestKitTransaction(this, transaction);
+		return new Neo4jReactiveTransaction(this, transaction);
     }
 
     @Override

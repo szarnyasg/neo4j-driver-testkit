@@ -1,4 +1,4 @@
-package neo4j.driver.testkit;
+package neo4j.driver.reactive;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import org.neo4j.driver.v1.Value;
 import org.neo4j.driver.v1.Values;
 import org.neo4j.kernel.impl.core.NodeProxy;
 
-public class Neo4jTestKitRecordFactory {
+public class Neo4jReactiveRecordFactory {
 
     public static Record create(Map<String, Object> element) {
         final List<String> keys = new ArrayList<>(element.size());
