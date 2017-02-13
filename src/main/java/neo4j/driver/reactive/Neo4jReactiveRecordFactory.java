@@ -10,46 +10,63 @@ import java.util.stream.StreamSupport;
 
 import org.neo4j.driver.internal.InternalNode;
 import org.neo4j.driver.internal.InternalRecord;
+import org.neo4j.driver.internal.InternalRelationship;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Value;
 import org.neo4j.driver.v1.Values;
-import org.neo4j.kernel.impl.core.NodeProxy;
+import org.neo4j.graphdb.Entity;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 
 public class Neo4jReactiveRecordFactory {
 
-    public static Record create(Map<String, Object> element) {
-        final List<String> keys = new ArrayList<>(element.size());
-        final List<Value> values = new ArrayList<>(element.size());
+	public static Record create(Map<String, Object> element) {
+		final List<String> keys = new ArrayList<>(element.size());
+		final List<Value> values = new ArrayList<>(element.size());
 
-        for (Entry<String, Object> entry : element.entrySet()) {
-            keys.add(entry.getKey());
-            final Value value = convert(entry.getValue());
-            values.add(value);
-        }
+		for (Entry<String, Object> entry : element.entrySet()) {
+			keys.add(entry.getKey());
+			final Value value = convert(entry.getValue());
+			values.add(value);
+		}
 
-        return new InternalRecord(keys, values.toArray(new Value[values.size()]));
-    }
+		return new InternalRecord(keys, values.toArray(new Value[values.size()]));
+	}
 
-    private static Value convert(Object value) {
-        final Object myValue;
-        if (value instanceof NodeProxy) {
-            final NodeProxy nodeProxy = (NodeProxy) value;
+	private static Value convert(Object value) {
+		final Object myValue;
+		// if (value instanceof NodeProxy) {
+		if (value instanceof Entity) {
+			final Entity entity = (Entity) value;
 
-            final long id = nodeProxy.getId();
-            final List<String> labels = StreamSupport.stream(nodeProxy.getLabels().spliterator(), false)
-                    .map(x -> x.toString()).collect(Collectors.toList());
+			final long id = entity.getId();
+			final Map<String, Value> properties = new HashMap<>();
+			for (final Map.Entry<String, Object> entry : entity.getAllProperties().entrySet()) {
+				properties.put(entry.getKey(), convert(entry.getValue()));
+			}
 
-            final Map<String, Value> properties = new HashMap<>();
-            for (final Map.Entry<String, Object> entry : nodeProxy.getAllProperties().entrySet()) {
-                properties.put(entry.getKey(), convert(entry.getValue()));
-            }
+			if (value instanceof Node) {
+				final Node node = (Node) value;
+				final List<String> labels = StreamSupport.stream(node.getLabels().spliterator(), false)
+						.map(label -> label.name()).collect(Collectors.toList());
 
-            myValue = new InternalNode(id, labels, properties);
-        } else {
-            myValue = value;
-        }
+				myValue = new InternalNode(id, labels, properties);
+			} else if (value instanceof Relationship) {
+				final Relationship relationship = (Relationship) value;
+				final long start = relationship.getStartNode().getId();
+				final long end = relationship.getEndNode().getId();
+				final String type = relationship.getType().name();
 
-        return Values.value(myValue);
-    }
+				myValue = new InternalRelationship(id, start, end, type);
+			} else {
+				throw new UnsupportedOperationException(
+						String.format("Entity %s is neither a Node nor a Relationship.", value));
+			}
+		} else {
+			myValue = value;
+		}
+
+		return Values.value(myValue);
+	}
 
 }
