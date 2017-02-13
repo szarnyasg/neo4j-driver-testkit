@@ -6,4 +6,4 @@ cd "$( cd "$( dirname "$0" )" && pwd )/../.."
 
 git clone https://github.com/szarnyasg/neo4j-java-driver
 cd neo4j-java-driver
-mvn clean install
+mvn clean install -DskipTests
