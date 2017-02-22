@@ -25,7 +25,7 @@ publishing {
 ext {
 	guavaVersion = '21.0'
 	junitVersion = '4.12'
-	neo4jDriverVersion = '1.1-SNAPSHOT'
+	neo4jDriverVersion = '1.1.2'
 	neo4jVersion = '3.1.1'
 }
 
