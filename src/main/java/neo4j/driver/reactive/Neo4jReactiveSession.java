@@ -125,7 +125,7 @@ public class Neo4jReactiveSession implements Session {
 
     	queryResults.put(queryName, newResults);
     	System.out.println("current> " + currentResults);
-    	System.out.println("  new  > " + newResults);
+    	System.out.println("new....> " + newResults);
 
     	return new ChangeSet(positiveChanges, negativeChanges);
     }
