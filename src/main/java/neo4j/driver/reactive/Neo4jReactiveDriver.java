@@ -9,7 +9,8 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.test.TestGraphDatabaseFactory;
 
 /**
- * Extends Neo4j driver features by
+ * Extends Neo4j driver features with incremental features: clients can register queries
+ * and get the change set caused by the latest update operation.
  */
 public class Neo4jReactiveDriver implements Driver {
 
