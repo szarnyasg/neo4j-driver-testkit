@@ -1,14 +1,12 @@
 package neo4j.driver.reactive;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.neo4j.driver.internal.InternalNode;
 import org.neo4j.driver.internal.InternalRecord;
 import org.neo4j.driver.internal.InternalRelationship;
 import org.neo4j.driver.v1.Record;
@@ -17,6 +15,10 @@ import org.neo4j.driver.v1.Values;
 import org.neo4j.graphdb.Entity;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+
+import com.google.common.collect.Maps;
+
+import neo4j.driver.reactive.entities.PrettyPrintingNode;
 
 public class Neo4jReactiveRecordFactory {
 
@@ -36,11 +38,12 @@ public class Neo4jReactiveRecordFactory {
 	private static Value convert(Object value) {
 		final Object myValue;
 		// if (value instanceof NodeProxy) {
-		if (value instanceof Entity) {
+
+		if (value instanceof Entity) { // Node or Relationship
 			final Entity entity = (Entity) value;
 
 			final long id = entity.getId();
-			final Map<String, Value> properties = new HashMap<>();
+			final Map<String, Value> properties = Maps.newHashMap();
 			for (final Map.Entry<String, Object> entry : entity.getAllProperties().entrySet()) {
 				properties.put(entry.getKey(), convert(entry.getValue()));
 			}
@@ -50,14 +53,14 @@ public class Neo4jReactiveRecordFactory {
 				final List<String> labels = StreamSupport.stream(node.getLabels().spliterator(), false)
 						.map(label -> label.name()).collect(Collectors.toList());
 
-				myValue = new InternalNode(id, labels, properties);
+				myValue = new PrettyPrintingNode(id, labels, properties);
 			} else if (value instanceof Relationship) {
 				final Relationship relationship = (Relationship) value;
 				final long start = relationship.getStartNode().getId();
 				final long end = relationship.getEndNode().getId();
 				final String type = relationship.getType().name();
 
-				myValue = new InternalRelationship(id, start, end, type);
+				myValue = new InternalRelationship(id, start, end, type, properties);
 			} else {
 				throw new UnsupportedOperationException(
 						String.format("Entity %s is neither a Node nor a Relationship.", value));

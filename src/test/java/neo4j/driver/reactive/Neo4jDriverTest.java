@@ -1,4 +1,4 @@
-package neo4j.driver.reactive.test;
+package neo4j.driver.reactive;
 
 import static org.neo4j.driver.v1.Values.parameters;
 
