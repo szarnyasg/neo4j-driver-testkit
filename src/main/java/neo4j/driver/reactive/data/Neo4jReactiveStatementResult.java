@@ -1,5 +1,6 @@
 package neo4j.driver.reactive.data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,11 @@ public class Neo4jReactiveStatementResult implements StatementResult {
 
 	@Override
 	public List<Record> list() {
-		return null;
+		List<Record> recordList = new ArrayList<>();
+		while(this.hasNext()){
+			recordList.add(this.next());
+		}
+		return recordList;
 	}
 
 	@Override
