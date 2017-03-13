@@ -1,4 +1,4 @@
-package neo4j.driver.reactive.entities;
+package neo4j.driver.util;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import org.neo4j.driver.v1.types.Relationship;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import neo4j.driver.reactive.prettyprinter.PrettyPrinter;
+import neo4j.driver.util.PrettyPrinter;
 
 public class PrettyPrintingNodeTest {
 

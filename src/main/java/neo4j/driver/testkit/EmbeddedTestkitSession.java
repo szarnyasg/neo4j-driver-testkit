@@ -1,4 +1,4 @@
-package neo4j.driver.reactive;
+package neo4j.driver.testkit;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,21 +15,18 @@ import org.neo4j.driver.v1.types.TypeSystem;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Result;
 
-import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import com.google.common.collect.Multisets;
 
-import neo4j.driver.reactive.data.ChangeSet;
-import neo4j.driver.reactive.data.Neo4jReactiveStatementResult;
+import neo4j.driver.testkit.data.EmbeddedTestkitStatementResult;
 
-public class Neo4jReactiveSession implements Session {
+public class EmbeddedTestkitSession implements Session {
 
     final GraphDatabaseService gds;
     final Map<String, String> querySpecifications = new HashMap<>();
     final Map<String, Multiset<Record>> queryResults = new HashMap<>();
     final Map<String, Multiset<Record>> deltas = new HashMap<>();
 
-    public Neo4jReactiveSession(GraphDatabaseService gds, AccessMode mode) {
+    public EmbeddedTestkitSession(GraphDatabaseService gds, AccessMode mode) {
         this.gds = gds;
     }
 
@@ -41,7 +38,7 @@ public class Neo4jReactiveSession implements Session {
     @Override
     public StatementResult run(String statementTemplate, Map<String, Object> statementParameters) {
         final Result internalResult = gds.execute(statementTemplate, statementParameters);
-        final Neo4jReactiveStatementResult driverResult = new Neo4jReactiveStatementResult(internalResult);
+        final EmbeddedTestkitStatementResult driverResult = new EmbeddedTestkitStatementResult(internalResult);
         return driverResult;
     }
 
@@ -63,7 +60,7 @@ public class Neo4jReactiveSession implements Session {
     @Override
     public StatementResult run(Statement statement) {
     	final Result internalResult = gds.execute(statement.text());
-    	final Neo4jReactiveStatementResult driverResult = new Neo4jReactiveStatementResult(internalResult);
+    	final EmbeddedTestkitStatementResult driverResult = new EmbeddedTestkitStatementResult(internalResult);
 
     	return driverResult;
     }
@@ -76,7 +73,7 @@ public class Neo4jReactiveSession implements Session {
     @Override
     public Transaction beginTransaction() {
         org.neo4j.graphdb.Transaction transaction = gds.beginTx();
-		return new Neo4jReactiveTransaction(this, transaction);
+		return new EmbeddedTestkitTransaction(this, transaction);
     }
 
     @Override
@@ -96,38 +93,6 @@ public class Neo4jReactiveSession implements Session {
 
     @Override
     public void close() {
-    }
-
-    public ChangeSet registerQuery(String queryName, String querySpecification) {
-    	if (querySpecifications.containsKey(queryName)) {
-    		throw new IllegalStateException("Query " + queryName + " is already registered.");
-    	}
-
-    	querySpecifications.put(queryName, querySpecification);
-    	queryResults.put(queryName, HashMultiset.create());
-    	return getDeltas(queryName);
-    }
-
-    public ChangeSet getDeltas(String queryName) {
-    	final String querySpecification = querySpecifications.get(queryName);
-
-    	final StatementResult statementResult = run(querySpecification);
-
-    	final Multiset<Record> currentResults = queryResults.get(queryName);
-    	final Multiset<Record> newResults = HashMultiset.create();
-    	while (statementResult.hasNext()) {
-    		final Record record = statementResult.next();
-    		newResults.add(record);
-    	}
-
-    	final Multiset<Record> positiveChanges = Multisets.difference(newResults, currentResults);
-    	final Multiset<Record> negativeChanges = Multisets.difference(currentResults, newResults);
-
-    	queryResults.put(queryName, newResults);
-    	System.out.println("current> " + currentResults);
-    	System.out.println("new....> " + newResults);
-
-    	return new ChangeSet(positiveChanges, negativeChanges);
     }
 
 }

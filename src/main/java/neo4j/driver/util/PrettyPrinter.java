@@ -1,4 +1,4 @@
-package neo4j.driver.reactive.prettyprinter;
+package neo4j.driver.util;
 
 import java.util.List;
 import java.util.Map;

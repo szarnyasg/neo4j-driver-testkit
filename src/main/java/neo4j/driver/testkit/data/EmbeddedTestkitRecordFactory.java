@@ -1,4 +1,4 @@
-package neo4j.driver.reactive;
+package neo4j.driver.testkit.data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.neo4j.graphdb.Relationship;
 
 import com.google.common.collect.Maps;
 
-public class Neo4jReactiveRecordFactory {
+public class EmbeddedTestkitRecordFactory {
 
 	public static Record create(Map<String, Object> element) {
 		final List<String> keys = new ArrayList<>(element.size());

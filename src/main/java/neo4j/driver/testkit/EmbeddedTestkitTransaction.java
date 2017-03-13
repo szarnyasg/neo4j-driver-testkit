@@ -1,7 +1,8 @@
-package neo4j.driver.reactive;
+package neo4j.driver.testkit;
 
 import java.util.Map;
 
+import org.neo4j.driver.internal.types.InternalTypeSystem;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Statement;
 import org.neo4j.driver.v1.StatementResult;
@@ -9,19 +10,19 @@ import org.neo4j.driver.v1.Value;
 import org.neo4j.driver.v1.types.TypeSystem;
 import org.neo4j.graphdb.Transaction;
 
-public class Neo4jReactiveTransaction implements org.neo4j.driver.v1.Transaction {
+public class EmbeddedTestkitTransaction implements org.neo4j.driver.v1.Transaction {
 
-	final Neo4jReactiveSession session;
+	final EmbeddedTestkitSession session;
 	final Transaction internalTransaction;
 
-	public Neo4jReactiveTransaction(Neo4jReactiveSession session, Transaction internalTransaction) {
+	public EmbeddedTestkitTransaction(EmbeddedTestkitSession session, Transaction internalTransaction) {
 		this.session = session;
 		this.internalTransaction = internalTransaction;
 	}
 
     @Override
     public boolean isOpen() {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -51,26 +52,22 @@ public class Neo4jReactiveTransaction implements org.neo4j.driver.v1.Transaction
 
     @Override
     public TypeSystem typeSystem() {
-        // TODO Auto-generated method stub
-        return null;
+    	return InternalTypeSystem.TYPE_SYSTEM;
     }
 
     @Override
     public void success() {
-        // TODO Auto-generated method stub
-
+    	internalTransaction.success();
     }
 
     @Override
     public void failure() {
-        // TODO Auto-generated method stub
-
+        internalTransaction.failure();
     }
 
     @Override
     public void close() {
-        // TODO Auto-generated method stub
-
+    	internalTransaction.close();
     }
 
 }

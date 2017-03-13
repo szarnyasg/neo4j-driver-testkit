@@ -1,4 +1,4 @@
-package neo4j.driver.reactive;
+package neo4j.driver.testkit;
 
 import java.io.File;
 
@@ -9,18 +9,17 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.test.TestGraphDatabaseFactory;
 
 /**
- * Extends Neo4j driver features with incremental features: clients can register queries
- * and get the change set caused by the latest update operation.
+ * Driver for testing an embedded Neo4j database through the neo4j-java-driver's Driver interface
  */
-public class Neo4jReactiveDriver implements Driver {
+public class EmbeddedTestkitDriver implements Driver {
 
     final GraphDatabaseService gds;
 
-    public Neo4jReactiveDriver() {
+    public EmbeddedTestkitDriver() {
     	gds = new TestGraphDatabaseFactory().newImpermanentDatabase();
     }
 
-    public Neo4jReactiveDriver(final File storeDir) {
+    public EmbeddedTestkitDriver(final File storeDir) {
     	gds = new GraphDatabaseFactory().newEmbeddedDatabase(storeDir);
     }
 
@@ -30,13 +29,13 @@ public class Neo4jReactiveDriver implements Driver {
     }
 
     @Override
-    public Neo4jReactiveSession session() {
+    public EmbeddedTestkitSession session() {
         return session(AccessMode.WRITE);
     }
 
     @Override
-    public Neo4jReactiveSession session(AccessMode mode) {
-        return new Neo4jReactiveSession(gds, mode);
+    public EmbeddedTestkitSession session(AccessMode mode) {
+        return new EmbeddedTestkitSession(gds, mode);
     }
 
     @Override
