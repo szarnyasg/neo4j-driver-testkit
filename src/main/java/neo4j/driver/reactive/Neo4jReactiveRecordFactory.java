@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.neo4j.driver.internal.InternalNode;
 import org.neo4j.driver.internal.InternalRecord;
 import org.neo4j.driver.internal.InternalRelationship;
 import org.neo4j.driver.v1.Record;
@@ -17,8 +18,6 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 
 import com.google.common.collect.Maps;
-
-import neo4j.driver.reactive.entities.PrettyPrintingNode;
 
 public class Neo4jReactiveRecordFactory {
 
@@ -37,8 +36,6 @@ public class Neo4jReactiveRecordFactory {
 
 	private static Value convert(Object value) {
 		final Object myValue;
-		// if (value instanceof NodeProxy) {
-
 		if (value instanceof Entity) { // Node or Relationship
 			final Entity entity = (Entity) value;
 
@@ -53,7 +50,7 @@ public class Neo4jReactiveRecordFactory {
 				final List<String> labels = StreamSupport.stream(node.getLabels().spliterator(), false)
 						.map(label -> label.name()).collect(Collectors.toList());
 
-				myValue = new PrettyPrintingNode(id, labels, properties);
+				myValue = new InternalNode(id, labels, properties);
 			} else if (value instanceof Relationship) {
 				final Relationship relationship = (Relationship) value;
 				final long start = relationship.getStartNode().getId();
