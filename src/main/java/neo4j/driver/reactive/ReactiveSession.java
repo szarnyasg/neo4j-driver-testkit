@@ -30,14 +30,14 @@ public class ReactiveSession implements Session {
 		this.session = session;
 	}
 
-	public RecordChangeSet registerQuery(String queryName, String querySpecification) {
+	public StatementResult registerQuery(String queryName, String querySpecification) {
 		if (querySpecifications.containsKey(queryName)) {
 			throw new IllegalStateException("Query " + queryName + " is already registered.");
 		}
 
 		querySpecifications.put(queryName, querySpecification);
 		queryResults.put(queryName, HashMultiset.create());
-		return getDeltas(queryName);
+		return run(querySpecification);
 	}
 
 	public RecordChangeSet getDeltas(String queryName) {
