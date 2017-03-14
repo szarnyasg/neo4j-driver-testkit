@@ -29,7 +29,8 @@ public class Neo4jDriverTest {
 	public void test1() throws Exception {
 		final String PERSONS_QUERY = "persons";
 
-		final RecordChangeSet changeSet1 = session.registerQuery(PERSONS_QUERY, "MATCH (a:Person) RETURN a");
+		session.registerQuery(PERSONS_QUERY, "MATCH (a:Person) RETURN a");
+		final RecordChangeSet changeSet1 = session.getDeltas(PERSONS_QUERY);
 		System.out.println(changeSet1);
 		System.out.println();
 
@@ -45,7 +46,8 @@ public class Neo4jDriverTest {
 	public void test2() throws Exception {
 		final String PERSONS_QUERY = "persons";
 
-		final RecordChangeSet changeSet1 = session.registerQuery(PERSONS_QUERY, "MATCH (a:Person) RETURN a");
+		session.registerQuery(PERSONS_QUERY, "MATCH (a:Person) RETURN a");
+		final RecordChangeSet changeSet1 = session.getDeltas(PERSONS_QUERY);
 		System.out.println(changeSet1);
 		System.out.println();
 
@@ -62,7 +64,8 @@ public class Neo4jDriverTest {
 
 		final String PERSONS_QUERY = "persons";
 
-		final RecordChangeSet changeSet1 = session.registerQuery(PERSONS_QUERY, "MATCH (a:Person) RETURN a");
+		session.registerQuery(PERSONS_QUERY, "MATCH (a:Person) RETURN a");
+		final RecordChangeSet changeSet1 = session.getDeltas(PERSONS_QUERY);
 		System.out.println(changeSet1);
 		System.out.println();
 
