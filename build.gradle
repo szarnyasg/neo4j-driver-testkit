@@ -1,7 +1,8 @@
 group = 'neo4j-reactive-driver'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 jar { from sourceSets.main.allJava }
@@ -19,6 +20,14 @@ configurations.all { exclude group: 'asm' }
 publishing {
 	publications {
 		mavenJava(MavenPublication) { from components.java }
+	}
+}
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			repository(url: 'file:///tmp/mvn_repo')
+		}
 	}
 }
 
