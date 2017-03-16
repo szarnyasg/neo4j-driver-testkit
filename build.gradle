@@ -1,53 +1,47 @@
-group = 'neo4j-reactive-driver'
-version = '0.0.2-SNAPSHOT'
-
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-
-jar { from sourceSets.main.allJava }
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-	mavenLocal()
-	jcenter()
-}
-
-configurations.all { exclude group: 'asm' }
-
-publishing {
-	publications {
-		mavenJava(MavenPublication) { from components.java }
-	}
-}
-
-uploadArchives {
-	repositories {
-		mavenDeployer {
-			repository(url: 'file:///tmp/mvn_repo')
-		}
-	}
-}
+group = 'neo4j-drivers'
+version = '0.0.3-SNAPSHOT'
 
 ext {
-	guavaVersion = '21.0'
-	junitVersion = '4.12'
-	neo4jDriverVersion = '1.1.2'
-	neo4jVersion = '3.1.1'
+  guavaVersion = '21.0'
+  junitVersion = '4.12'
+  neo4jDriverVersion = '1.1.2'
+  neo4jVersion = '3.1.1'
 }
 
-dependencies {
-	compile group: 'com.google.guava', name: 'guava', version: guavaVersion
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'maven'
+  apply plugin: 'maven-publish'
 
-	compile group: 'org.neo4j', name: 'neo4j', version: neo4jVersion
-	compile group: 'org.neo4j', name: 'neo4j-kernel', version: neo4jVersion
-	compile group: 'org.neo4j', name: 'neo4j-io', version: neo4jVersion
-	compile group: 'org.neo4j', name: 'neo4j-kernel', version: neo4jVersion, classifier: 'tests'
-	compile group: 'org.neo4j', name: 'neo4j-io', version: neo4jVersion, classifier: 'tests'
+  jar { from sourceSets.main.allJava }
 
-	compile group: 'org.neo4j.driver', name: 'neo4j-java-driver', version: neo4jDriverVersion
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
 
-	testCompile group: 'junit', name: 'junit', version: junitVersion
+  repositories {
+    mavenLocal()
+    jcenter()
+  }
+
+  configurations.all { exclude group: 'asm' }
+
+  publishing {
+    publications {
+      mavenJava(MavenPublication) { from components.java }
+    }
+  }
+
+  uploadArchives {
+  	repositories {
+  		mavenDeployer {
+  			repository(url: 'file:///tmp/mvn_repo')
+  		}
+  	}
+  }
+
+  dependencies {
+    compile group: 'com.google.guava', name: 'guava', version: guavaVersion
+    compile group: 'org.neo4j.driver', name: 'neo4j-java-driver', version: neo4jDriverVersion
+    testCompile group: 'junit', name: 'junit', version: junitVersion
+  }
 }
