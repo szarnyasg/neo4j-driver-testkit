@@ -10,6 +10,7 @@ import org.neo4j.driver.v1.Transaction;
 import org.neo4j.driver.v1.Value;
 
 import neo4j.driver.reactive.data.RecordChangeSet;
+import neo4j.driver.reactive.impl.Neo4jReactiveDriver;
 import neo4j.driver.testkit.EmbeddedTestkitDriver;
 
 public class Neo4jDriverTest {
@@ -21,7 +22,7 @@ public class Neo4jDriverTest {
 	@Before
 	public void before() {
 		embeddedTestkitDriver = new EmbeddedTestkitDriver();
-		driver = new ReactiveDriver(embeddedTestkitDriver);
+		driver = new Neo4jReactiveDriver(embeddedTestkitDriver);
 		session = driver.session();
 	}
 
