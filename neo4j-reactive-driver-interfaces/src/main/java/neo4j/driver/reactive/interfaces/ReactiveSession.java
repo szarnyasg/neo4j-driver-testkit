@@ -1,4 +1,4 @@
-package neo4j.driver.reactive;
+package neo4j.driver.reactive.interfaces;
 
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;

@@ -2,4 +2,5 @@ rootProject.name = 'neo4j-drivers'
 
 include ':neo4j-driver-util'
 include ':neo4j-embedded-testkit-driver'
-include ':neo4j-reactive-driver'
+include ':neo4j-reactive-driver-impl'
+include ':neo4j-reactive-driver-interfaces'

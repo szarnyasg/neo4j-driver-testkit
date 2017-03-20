@@ -11,6 +11,8 @@ import org.neo4j.driver.v1.Value;
 
 import neo4j.driver.reactive.data.RecordChangeSet;
 import neo4j.driver.reactive.impl.Neo4jReactiveDriver;
+import neo4j.driver.reactive.interfaces.ReactiveDriver;
+import neo4j.driver.reactive.interfaces.ReactiveSession;
 import neo4j.driver.testkit.EmbeddedTestkitDriver;
 
 public class Neo4jDriverTest {

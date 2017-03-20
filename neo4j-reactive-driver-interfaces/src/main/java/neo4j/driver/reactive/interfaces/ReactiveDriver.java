@@ -1,4 +1,4 @@
-package neo4j.driver.reactive;
+package neo4j.driver.reactive.interfaces;
 
 public interface ReactiveDriver {
 

@@ -15,8 +15,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
 
-import neo4j.driver.reactive.ReactiveSession;
 import neo4j.driver.reactive.data.RecordChangeSet;
+import neo4j.driver.reactive.interfaces.ReactiveSession;
 
 public class Neo4jReactiveSession implements ReactiveSession {
 

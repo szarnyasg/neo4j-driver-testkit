@@ -2,8 +2,8 @@ package neo4j.driver.reactive.impl;
 
 import org.neo4j.driver.v1.Driver;
 
-import neo4j.driver.reactive.ReactiveDriver;
-import neo4j.driver.reactive.ReactiveSession;
+import neo4j.driver.reactive.interfaces.ReactiveDriver;
+import neo4j.driver.reactive.interfaces.ReactiveSession;
 
 /**
  * Extends Neo4j driver features with incremental features: clients can register queries
