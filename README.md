@@ -22,7 +22,7 @@ This will invoke the `publishToMavenLocal` goal.
 To use this from a Gradle project, add the following dependency:
 
 ```
-compile group: 'neo4j-reactive-driver', name: 'neo4j-reactive-driver', version: '0.0.2-SNAPSHOT'
+compile group: 'neo4j-drivers', name: '...', version: '0.0.3-SNAPSHOT'
 ```
 
 ## Deploying binary artifacts

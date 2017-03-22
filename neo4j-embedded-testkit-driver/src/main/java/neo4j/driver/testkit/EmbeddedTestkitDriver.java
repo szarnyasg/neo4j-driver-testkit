@@ -13,7 +13,7 @@ import org.neo4j.test.TestGraphDatabaseFactory;
  */
 public class EmbeddedTestkitDriver implements Driver {
 
-    final GraphDatabaseService gds;
+    protected final GraphDatabaseService gds;
 
     public EmbeddedTestkitDriver() {
     	gds = new TestGraphDatabaseFactory().newImpermanentDatabase();
@@ -40,6 +40,10 @@ public class EmbeddedTestkitDriver implements Driver {
 
     @Override
     public void close() {
+    }
+
+    public GraphDatabaseService getUnderlyingDatabaseService() {
+    	return gds;
     }
 
 }

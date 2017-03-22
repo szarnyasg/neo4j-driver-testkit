@@ -1,5 +1,7 @@
-group = 'neo4j-drivers'
-version = '0.0.3-SNAPSHOT'
+allprojects {
+  group = 'neo4j-drivers'
+  version = '0.0.3-SNAPSHOT'
+}
 
 ext {
   guavaVersion = '21.0'

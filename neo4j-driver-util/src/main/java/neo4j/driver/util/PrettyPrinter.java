@@ -1,5 +1,6 @@
 package neo4j.driver.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import org.neo4j.driver.internal.value.PathValue;
 import org.neo4j.driver.internal.value.RelationshipValue;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Value;
+import org.neo4j.driver.v1.types.Entity;
 import org.neo4j.driver.v1.types.Node;
 import org.neo4j.driver.v1.types.Path;
 import org.neo4j.driver.v1.types.Relationship;
@@ -18,16 +20,27 @@ import com.google.common.base.Joiner;
 
 public class PrettyPrinter {
 
+	public static String toString(List<Entity> entities) {
+		final List<String> result = new ArrayList<>(entities.size());
+
+		for (final Entity entity : entities) {
+			if (entity instanceof Node) {
+				result.add(toString((Node) entity));
+			} else if (entity instanceof Relationship) {
+				result.add(toString((Relationship) entity));
+			}
+		}
+
+		final Joiner joiner = Joiner.on(",");
+		return String.format("[%s]", joiner.join(result));
+	}
+
 	public static String toString(Record record) {
 		Joiner entityJoiner = Joiner.on(", ");
 
 		List<String> formattedEntityList = record.fields() //
 				.stream() //
-				.map(pair -> String.format(
-						"%s=%s",
-						pair.key(),
-						toString(pair.value())
-					)) //
+				.map(pair -> String.format("%s=%s", pair.key(), toString(pair.value()))) //
 				.collect(Collectors.toList());
 
 		return String.format("<%s>", entityJoiner.join(formattedEntityList));
@@ -53,9 +66,13 @@ public class PrettyPrinter {
 	public static String toString(Relationship relationship) {
 		String propertiesString = toString(relationship.asMap());
 
-		return String.format("[:%s%s%s]", relationship.type(), //
+		return String.format("(%s)-[:%s%s%s]-(%s)", //
+				relationship.startNodeId(),
+				relationship.type(), //
 				propertiesString.isEmpty() ? "" : " ", //
-				propertiesString);
+				propertiesString, //
+				relationship.endNodeId() //
+				);
 	}
 
 	public static String toString(Path path) {
