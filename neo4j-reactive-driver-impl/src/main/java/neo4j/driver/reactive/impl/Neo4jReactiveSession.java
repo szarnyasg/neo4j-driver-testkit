@@ -7,6 +7,7 @@ import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.Statement;
 import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.driver.v1.Transaction;
+import org.neo4j.driver.v1.TransactionWork;
 import org.neo4j.driver.v1.Value;
 import org.neo4j.driver.v1.types.TypeSystem;
 
@@ -125,6 +126,16 @@ public class Neo4jReactiveSession implements ReactiveSession {
 	@Override
 	public void close() {
 		session.close();
+	}
+
+	@Override
+	public <T> T readTransaction(TransactionWork<T> work) {
+		throw new UnsupportedOperationException("readTransaction method not supported.");
+	}
+
+	@Override
+	public <T> T writeTransaction(TransactionWork<T> work) {
+		throw new UnsupportedOperationException("writeTransaction method not supported.");
 	}
 
 }
