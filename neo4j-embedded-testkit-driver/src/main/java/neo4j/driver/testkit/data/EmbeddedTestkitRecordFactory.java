@@ -19,6 +19,9 @@ import org.neo4j.graphdb.Relationship;
 
 import com.google.common.collect.Maps;
 
+import scala.collection.JavaConversions;
+import scala.collection.convert.Wrappers;
+
 public class EmbeddedTestkitRecordFactory {
 
 	public static Record create(Map<String, Object> element) {
@@ -36,6 +39,7 @@ public class EmbeddedTestkitRecordFactory {
 
 	private static Value convert(Object value) {
 		final Object myValue;
+
 		if (value instanceof Entity) { // Node or Relationship
 			final Entity entity = (Entity) value;
 
@@ -62,6 +66,10 @@ public class EmbeddedTestkitRecordFactory {
 				throw new UnsupportedOperationException(
 						String.format("Entity %s is neither a Node nor a Relationship.", value));
 			}
+		} else if (value instanceof Wrappers.SeqWrapper<?>) {
+			final Wrappers.SeqWrapper<?> seqWrapper = (Wrappers.SeqWrapper<?>) value;
+			final List<?> list = JavaConversions.seqAsJavaList(seqWrapper.underlying());
+			myValue = list.stream().map(element -> convert(element)).collect(Collectors.toList());
 		} else {
 			myValue = value;
 		}
