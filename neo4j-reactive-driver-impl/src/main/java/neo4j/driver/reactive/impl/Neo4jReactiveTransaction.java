@@ -1,13 +1,13 @@
-package neo4j.driver.testkit;
+package neo4j.driver.reactive.impl;
 
 import org.neo4j.driver.v1.Session;
-import org.neo4j.graphdb.Transaction;
+import org.neo4j.driver.v1.Transaction;
 
 import neo4j.driver.transactions.SessionDependentTransaction;
 
-public class EmbeddedTestkitTransaction extends SessionDependentTransaction<org.neo4j.graphdb.Transaction> {
+public class Neo4jReactiveTransaction extends SessionDependentTransaction<org.neo4j.driver.v1.Transaction> {
 
-	public EmbeddedTestkitTransaction(Session session, Transaction internalTransaction) {
+	public Neo4jReactiveTransaction(Session session, Transaction internalTransaction) {
 		super(session, internalTransaction);
 	}
 
@@ -28,7 +28,7 @@ public class EmbeddedTestkitTransaction extends SessionDependentTransaction<org.
 
 	@Override
 	public boolean isOpen() {
-		return true;
+		return internalTransaction.isOpen();
 	}
 
 }

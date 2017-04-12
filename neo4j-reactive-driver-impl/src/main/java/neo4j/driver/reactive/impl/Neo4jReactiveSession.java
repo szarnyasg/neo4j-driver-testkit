@@ -1,6 +1,8 @@
 package neo4j.driver.reactive.impl;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
@@ -18,6 +20,7 @@ import com.google.common.collect.Multisets;
 
 import neo4j.driver.reactive.data.RecordChangeSet;
 import neo4j.driver.reactive.interfaces.ReactiveSession;
+import neo4j.driver.reactive.interfaces.RecordChangeSetListener;
 
 public class Neo4jReactiveSession implements ReactiveSession {
 
@@ -25,7 +28,7 @@ public class Neo4jReactiveSession implements ReactiveSession {
 
 	final Map<String, String> querySpecifications = Maps.newHashMap();
 	final Map<String, Multiset<Record>> queryResults = Maps.newHashMap();
-	final Map<String, Multiset<Record>> deltas = Maps.newHashMap();
+	final Map<String, RecordChangeSetListener> listeners = Maps.newHashMap();
 
 	public Neo4jReactiveSession(Session session) {
 		super();
@@ -33,14 +36,17 @@ public class Neo4jReactiveSession implements ReactiveSession {
 	}
 
 	@Override
-	public StatementResult registerQuery(String queryName, String querySpecification) {
+	public RecordChangeSetListener registerQuery(String queryName, String querySpecification) {
 		if (querySpecifications.containsKey(queryName)) {
 			throw new IllegalStateException("Query " + queryName + " is already registered.");
 		}
 
 		querySpecifications.put(queryName, querySpecification);
 		queryResults.put(queryName, HashMultiset.create());
-		return run(querySpecification);
+		final Neo4jRecordChangeSetListener listener = new Neo4jRecordChangeSetListener();
+		listeners.put(queryName, listener);
+
+		return listener;
 	}
 
 	@Override
@@ -62,8 +68,6 @@ public class Neo4jReactiveSession implements ReactiveSession {
 		final Multiset<Record> negativeChanges = Multisets.difference(currentResults, newResults);
 
 		queryResults.put(queryName, newResults);
-		System.out.println("current> " + currentResults);
-		System.out.println("new....> " + newResults);
 
 		return new RecordChangeSet(positiveChanges, negativeChanges);
 	}
@@ -74,28 +78,36 @@ public class Neo4jReactiveSession implements ReactiveSession {
 	}
 
 	@Override
-	public StatementResult run(String statementTemplate, Value parameters) {
-		return session.run(statementTemplate, parameters);
+	public StatementResult run(String statementTemplate, Map<String, Object> statementParameters) {
+		for (final Entry<String, RecordChangeSetListener> entry : listeners.entrySet()) {
+			final String queryName = entry.getKey();
+			final RecordChangeSetListener listener = entry.getValue();
+
+			final RecordChangeSet rcs = getDeltas(queryName);
+			listener.notify(rcs);
+		}
+
+		return session.run(statementTemplate, statementParameters);
 	}
 
 	@Override
-	public StatementResult run(String statementTemplate, Map<String, Object> statementParameters) {
-		return session.run(statementTemplate, statementParameters);
+	public StatementResult run(String statementTemplate, Value parameters) {
+		return run(statementTemplate, parameters.asMap());
 	}
 
 	@Override
 	public StatementResult run(String statementTemplate, Record statementParameters) {
-		return session.run(statementTemplate, statementParameters);
+		return run(statementTemplate, statementParameters.asMap());
 	}
 
 	@Override
 	public StatementResult run(String statementTemplate) {
-		return session.run(statementTemplate);
+		return run(statementTemplate, Collections.emptyMap());
 	}
 
 	@Override
 	public StatementResult run(Statement statement) {
-		return session.run(statement);
+		return run(statement.text());
 	}
 
 	@Override
@@ -105,12 +117,13 @@ public class Neo4jReactiveSession implements ReactiveSession {
 
 	@Override
 	public Transaction beginTransaction() {
-		return session.beginTransaction();
+		final Transaction transaction = session.beginTransaction();
+		return new Neo4jReactiveTransaction(this, transaction);
 	}
 
 	@Override
 	public Transaction beginTransaction(String bookmark) {
-		return session.beginTransaction(bookmark);
+		return beginTransaction(bookmark);
 	}
 
 	@Override

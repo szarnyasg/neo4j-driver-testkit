@@ -1,13 +1,12 @@
 package neo4j.driver.reactive.interfaces;
 
 import org.neo4j.driver.v1.Session;
-import org.neo4j.driver.v1.StatementResult;
 
 import neo4j.driver.reactive.data.RecordChangeSet;
 
-public interface ReactiveSession extends Session{
+public interface ReactiveSession extends Session {
 
-	StatementResult registerQuery(String queryName, String querySpecification);
+	RecordChangeSetListener registerQuery(String queryName, String querySpecification);
 
 	RecordChangeSet getDeltas(String queryName);
 
