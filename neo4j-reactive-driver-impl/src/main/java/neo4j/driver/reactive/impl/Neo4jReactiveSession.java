@@ -43,7 +43,7 @@ public class Neo4jReactiveSession implements ReactiveSession {
 
 		querySpecifications.put(queryName, querySpecification);
 		queryResults.put(queryName, HashMultiset.create());
-		final Neo4jRecordChangeSetListener listener = new Neo4jRecordChangeSetListener();
+		final Neo4jRecordChangeSetListener listener = new Neo4jRecordChangeSetListener(queryName);
 		listeners.put(queryName, listener);
 
 		return listener;
@@ -56,12 +56,10 @@ public class Neo4jReactiveSession implements ReactiveSession {
 		final Multiset<Record> currentResults = queryResults.get(queryName);
 		final Multiset<Record> newResults = HashMultiset.create();
 
-		try (Transaction tx = beginTransaction()) {
-			final StatementResult statementResult = session.run(querySpecification);
-			while (statementResult.hasNext()) {
-				final Record record = statementResult.next();
-				newResults.add(record);
-			}
+		final StatementResult statementResult = session.run(querySpecification);
+		while (statementResult.hasNext()) {
+			final Record record = statementResult.next();
+			newResults.add(record);
 		}
 
 		final Multiset<Record> positiveChanges = Multisets.difference(newResults, currentResults);
@@ -79,6 +77,8 @@ public class Neo4jReactiveSession implements ReactiveSession {
 
 	@Override
 	public StatementResult run(String statementTemplate, Map<String, Object> statementParameters) {
+		final StatementResult result = session.run(statementTemplate, statementParameters);
+
 		for (final Entry<String, RecordChangeSetListener> entry : listeners.entrySet()) {
 			final String queryName = entry.getKey();
 			final RecordChangeSetListener listener = entry.getValue();
@@ -87,7 +87,7 @@ public class Neo4jReactiveSession implements ReactiveSession {
 			listener.notify(rcs);
 		}
 
-		return session.run(statementTemplate, statementParameters);
+		return result;
 	}
 
 	@Override
