@@ -123,7 +123,8 @@ public class Neo4jReactiveSession implements ReactiveSession {
 
 	@Override
 	public Transaction beginTransaction(String bookmark) {
-		return session.beginTransaction(bookmark);
+		final Transaction transaction = session.beginTransaction(bookmark);
+		return new Neo4jReactiveTransaction(this, transaction);
 	}
 
 	@Override
