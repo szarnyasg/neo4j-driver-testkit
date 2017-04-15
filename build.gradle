@@ -45,3 +45,6 @@ subprojects {
     testCompile group: 'junit', name: 'junit', version: junitVersion
   }
 }
+plugins {
+  id "org.sonarqube" version "2.3"
+}
