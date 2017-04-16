@@ -37,7 +37,7 @@ public class EmbeddedTestkitStatementResult implements StatementResult {
 	}
 
 	@Override
-	public Record single() throws NoSuchRecordException {
+	public Record single(){
 		if (result.hasNext()) {
 			return next();
 		} else {
