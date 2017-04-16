@@ -16,8 +16,9 @@ public class Neo4jRecordChangeSetListener implements RecordChangeSetListener {
 
 	@Override
 	public void notify(RecordChangeSet rcs) {
-		logger.log(Level.ALL, "A new changeSet appeared for listener '" + queryName + "':");
-		logger.log(Level.ALL, rcs.toString());
+		logger.log(Level.ALL, "A new changeSet appeared for listener '%s':",queryName);
+		String  recordCangeSetString = rcs.toString();
+		logger.log(Level.ALL, recordCangeSetString);
 	}
 
 }
