@@ -95,6 +95,7 @@ public class EmbeddedTestkitSession implements Session {
 	@Override
 	public void close() {
 	//this method needs to be implemented
+		throw new UnsupportedOperationException("close");
 	}
 
 	@Override
