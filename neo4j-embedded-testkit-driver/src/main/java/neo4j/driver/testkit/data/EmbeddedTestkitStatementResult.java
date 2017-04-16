@@ -1,6 +1,7 @@
 package neo4j.driver.testkit.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +61,7 @@ public class EmbeddedTestkitStatementResult implements StatementResult {
 
 	@Override
 	public <T> List<T> list(Function<Record, T> mapFunction) {
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override
