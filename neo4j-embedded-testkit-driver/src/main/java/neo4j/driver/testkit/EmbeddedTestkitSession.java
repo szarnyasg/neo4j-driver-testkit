@@ -92,8 +92,9 @@ public class EmbeddedTestkitSession implements Session {
 		throw new UnsupportedOperationException("Reset not supported.");
 	}
 
-	
+	@Override
 	public void close() {
+	//this method needs to be implemented
 	}
 
 	@Override
