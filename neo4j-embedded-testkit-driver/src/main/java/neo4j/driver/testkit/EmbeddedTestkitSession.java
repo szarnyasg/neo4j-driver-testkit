@@ -68,6 +68,7 @@ public class EmbeddedTestkitSession implements Session {
 
 	@Override
 	public TypeSystem typeSystem() {
+		//this method is empty because we do not support Typesystem
 		throw new UnsupportedOperationException("Typesystem is not supported.");
 	}
 
