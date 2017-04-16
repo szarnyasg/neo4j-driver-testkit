@@ -27,7 +27,7 @@ public class EmbeddedTestkitSession implements Session {
 	final Map<String, Multiset<Record>> queryResults = new HashMap<>();
 	final Map<String, Multiset<Record>> deltas = new HashMap<>();
 
-	public EmbeddedTestkitSession(GraphDatabaseService gds, AccessMode mode) {
+	public EmbeddedTestkitSession(GraphDatabaseService gds) {
 		this.gds = gds;
 	}
 
