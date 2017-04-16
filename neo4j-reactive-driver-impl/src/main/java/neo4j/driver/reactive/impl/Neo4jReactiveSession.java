@@ -133,8 +133,10 @@ public class Neo4jReactiveSession implements ReactiveSession {
 	public String lastBookmark() {
 		return session.lastBookmark();
 	}
-
-	@Override
+	/**
+	 * @deprecated
+	 */
+	@Deprecated @Override
 	public void reset() {
 		session.reset();
 	}
