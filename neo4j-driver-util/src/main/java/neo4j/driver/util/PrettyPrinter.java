@@ -20,6 +20,8 @@ import com.google.common.base.Joiner;
 
 public class PrettyPrinter {
 
+	private PrettyPrinter(){}
+	
 	public static String toString(List<Entity> entities) {
 		final List<String> result = new ArrayList<>(entities.size());
 
