@@ -7,7 +7,7 @@ import neo4j.driver.reactive.data.RecordChangeSet;
 import neo4j.driver.reactive.interfaces.RecordChangeSetListener;
 
 public class Neo4jRecordChangeSetListener implements RecordChangeSetListener {
-	private final static Logger logger = Logger.getLogger(Neo4jRecordChangeSetListener.class.getName());
+	private static final Logger logger = Logger.getLogger(Neo4jRecordChangeSetListener.class.getName());
 	protected String queryName;
 
 	public Neo4jRecordChangeSetListener(String queryName) {
