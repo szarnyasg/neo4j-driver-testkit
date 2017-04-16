@@ -63,11 +63,11 @@ public class EmbeddedTestkitSession implements Session {
 		final Result internalResult = gds.execute(statement.text());
 		return new EmbeddedTestkitStatementResult(internalResult);
 
-		
+	
 	}
 
 	@Override
-	public TypeSystem typeSystem() {
+	public TypeSystem typeSystem() throws UnsupportedOperationException{
 		//this method is empty because we do not support Typesystem
 		throw new UnsupportedOperationException("Typesystem is not supported.");
 	}
