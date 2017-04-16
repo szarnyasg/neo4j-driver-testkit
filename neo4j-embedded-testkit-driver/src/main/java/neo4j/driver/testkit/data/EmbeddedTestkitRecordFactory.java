@@ -24,6 +24,7 @@ import scala.collection.convert.Wrappers;
 
 public class EmbeddedTestkitRecordFactory {
 
+	private EmbeddedTestkitRecordFactory(){}
 	public static Record create(Map<String, Object> element) {
 		final List<String> keys = new ArrayList<>(element.size());
 		final List<Value> values = new ArrayList<>(element.size());
