@@ -19,7 +19,9 @@ import org.neo4j.driver.v1.types.Relationship;
 import com.google.common.base.Joiner;
 
 public class PrettyPrinter {
-
+	private PrettyPrinter() {
+        throw new IllegalAccessError("Utility class");
+	}
 	public static String toString(List<Entity> entities) {
 		final List<String> result = new ArrayList<>(entities.size());
 
