@@ -35,6 +35,6 @@ Use the following command:
 
 Copy the files from the repository to wherever you'd like to deploy your artifacts. Change
 
-## Licensee
+## License
 
 The `neo4j-embedded-testkit-driver` project is available under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html) license. The `neo4j-reactive-driver` and the `neo4j-driver-util` projects are available under the [Eclipse Public License v1.0](http://www.eclipse.org/legal/epl-v10.html).
