@@ -27,6 +27,10 @@ public class Neo4jReactiveTransactionTest {
 	}
 	@Test
 	public void isOpenTest(){
-		Assert.assertTrue(sessionDependentTransaction.isOpen());
+		Assert.assertTrue(sessionDependentTransaction.isOpen());//EmbeddedTestKitSession.isOpen always true and this is a wrapper
+	}
+	@Test
+	public void failureTest(){
+		
 	}
 }
