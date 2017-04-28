@@ -22,6 +22,6 @@ public class Neo4jReactiveSessionTest
 	
 	@Test
 	public void isOpenTest(){
-		Assert.assertTrue(session.isOpen());
+		Assert.assertTrue(session.isOpen());//EmbeddedTestKitSession.isOpen always true and this is a wrapper
 	}
 }
