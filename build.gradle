@@ -6,10 +6,12 @@ buildscript {
   }
   dependencies {
     classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.3"
+
   }
 }
 
 apply plugin: "org.sonarqube"
+
 
 allprojects {
   group = 'neo4j-drivers'
@@ -23,7 +25,11 @@ ext {
   neo4jVersion = '3.1.1'
 }
 subprojects {
+
+  group 'org.jacoco'
+
   apply plugin: 'java'
+  apply plugin: 'jacoco'
   apply plugin: 'maven'
   apply plugin: 'maven-publish'
   
@@ -58,5 +64,18 @@ subprojects {
   dependencies {
     testCompile group: 'junit', name: 'junit', version: junitVersion
   }
+  
+  jacoco {
+    toolVersion = "0.7.6.201602180812"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+  }
+  
+  jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+		html.destination "${buildDir}/jacocoHtml"
+    }
+ }
+ test { finalizedBy jacocoTestReport }
 }
-
