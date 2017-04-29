@@ -1,6 +1,7 @@
 package neo4j.driver.util;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -81,7 +82,7 @@ public class PrettyPrinter {
 		throw new UnsupportedOperationException("Serialization of paths is not yet implemented.");
 	}
 
-	private static String toString(Map<String, Object> propertiesMap) {
+	public static String toString(Map<String, Object> propertiesMap) {
 		if (propertiesMap.isEmpty()) {
 			return "";
 		} else {
