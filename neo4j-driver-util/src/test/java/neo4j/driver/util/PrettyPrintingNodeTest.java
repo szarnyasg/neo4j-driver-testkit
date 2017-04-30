@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.neo4j.driver.internal.InternalNode;
 import org.neo4j.driver.internal.InternalPath;
+import org.neo4j.driver.internal.InternalRecord;
 import org.neo4j.driver.internal.InternalRelationship;
 import org.neo4j.driver.internal.value.NodeValue;
 import org.neo4j.driver.internal.value.PathValue;
@@ -57,18 +58,21 @@ public class PrettyPrintingNodeTest {
 		testList.add(new InternalNode(1,labels2,nodeProperties));
 		System.out.println("Test: toStringListTest "+PrettyPrinter.toString(testList));
 	}
+	
 	@Test
 	public void toStringValueTestSimpleValue(){
 		Value value = Values.value(5000);
 		String valueString = PrettyPrinter.toString(value);
 		Assert.assertEquals(valueString,"5000");
 	}
+	
 	@Test
 	public void toStringValueTestRelationshipValue(){
 		Map<String, Value> relationshipProperties = ImmutableMap.of("weight", Values.value(2));
 		RelationshipValue relationshipValue = new RelationshipValue(new InternalRelationship(5, 1, 2, "REL", relationshipProperties));
 		Assert.assertEquals("(1)-[:REL {weight: 2}]-(2)", PrettyPrinter.toString(relationshipValue));
 	}
+	
 	@Test
 	public void toStringValueTestNodeValue(){
 		List<String> labels = ImmutableList.of("Person1");
@@ -94,6 +98,8 @@ public class PrettyPrintingNodeTest {
 		//TODO fix IllegalArgumentException
 	}*/
 	
+	
+	
 	@Test
 	public void toStringRelationshipTest(){
 		Map<String, Value> relationshipProperties = ImmutableMap.of("weight", Values.value(2));
@@ -102,23 +108,16 @@ public class PrettyPrintingNodeTest {
 	}
 
 	
-	/*@Test
+	@Test
 	public void toStringRecordTest(){
+		List<String> keyList = new ArrayList<String>();
+		keyList.add("Apple");
+		keyList.add("Guitar");
+		Value[] values = {Values.value(5000),Values.value(666)};
+		Record record = new InternalRecord(keyList, values);
 		
-		Driver driver = new Driver() ;
-			
-	
-			Session session = driver.session();
-				Transaction transaction = session.beginTransaction();
-					session.run("CREATE (n:Label)");
-					StatementResult statementResult = session.run("RETURN [1, 2] AS list");
-					while (statementResult.hasNext()) {
-						Record record = statementResult.next();
-						System.out.println(PrettyPrinter.toString(record));
-					}
-			driver.close();
-		
-	}*/
+		Assert.assertEquals("<Apple=5000, Guitar=666>", PrettyPrinter.toString(record));
+	}
 	/*
 	@Test (expected=UnsupportedOperationException.class )
 	public void toStringPathTest(){
