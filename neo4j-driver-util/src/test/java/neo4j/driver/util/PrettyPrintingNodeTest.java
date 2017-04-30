@@ -8,20 +8,13 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.neo4j.driver.internal.InternalNode;
-import org.neo4j.driver.internal.InternalPath;
 import org.neo4j.driver.internal.InternalRecord;
 import org.neo4j.driver.internal.InternalRelationship;
 import org.neo4j.driver.internal.value.NodeValue;
-import org.neo4j.driver.internal.value.PathValue;
 import org.neo4j.driver.internal.value.RelationshipValue;
-import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Session;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.Transaction;
 import org.neo4j.driver.v1.Value;
 import org.neo4j.driver.v1.Values;
-import org.neo4j.driver.v1.types.Entity;
 import org.neo4j.driver.v1.types.Node;
 import org.neo4j.driver.v1.types.Relationship;
 
@@ -56,7 +49,8 @@ public class PrettyPrintingNodeTest {
 		testList.add(new InternalNode(1,labels,nodeProperties));
 		testList.add(new InternalRelationship(5, 1, 2, "REL", relationshipProperties));
 		testList.add(new InternalNode(1,labels2,nodeProperties));
-		System.out.println("Test: toStringListTest "+PrettyPrinter.toString(testList));
+		
+		Assert.assertEquals("[(:Person1 {name: \"John Doe\"}),(1)-[:REL {weight: 2}]-(2),(:Person2 {name: \"John Doe\"})]", PrettyPrinter.toString(testList));
 	}
 	
 	@Test
