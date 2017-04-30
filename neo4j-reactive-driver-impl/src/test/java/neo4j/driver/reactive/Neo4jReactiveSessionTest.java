@@ -33,16 +33,12 @@ public class Neo4jReactiveSessionTest
 	public void isOpenTest(){
 		Assert.assertTrue(session.isOpen());//EmbeddedTestKitSession.isOpen always true and this is a wrapper
 	}
+	
 	@Test(expected=UnsupportedOperationException.class)
 	public void lastBookmarkTest1(){
-		
-	
 		session.lastBookmark();//EmbeddedTestKitSession.lastBookmark always throw Exception and this is a wrapper
 		
 	}
-	
-	
-	
 	
 	@Test
 	public void run1Test(){
@@ -62,5 +58,14 @@ public class Neo4jReactiveSessionTest
 	public void isEncryptedTest(){
 		//We always get false from this method
 		Assert.assertFalse(embeddedTestkitDriver.isEncrypted());
+	}
+	
+	@Test(expected=IllegalStateException.class)
+	public void registerQueryTwiceTest()
+	{
+		Neo4jReactiveSession neo4jSession = new Neo4jReactiveSession(embeddedTestkitDriver.session());
+		neo4jSession.registerQuery("q1", "This is a test query");
+		neo4jSession.registerQuery("q1", "This is a test query");
+		neo4jSession.close();
 	}
 }
