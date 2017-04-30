@@ -98,7 +98,8 @@ public class PrettyPrintingNodeTest {
 	public void toStringRelationshipTest(){
 		Map<String, Value> relationshipProperties = ImmutableMap.of("weight", Values.value(2));
 		Relationship rel = new InternalRelationship(5, 1, 2, "REL", relationshipProperties);
-		System.out.println("Test: toStringRelationshipTest "+PrettyPrinter.toString(rel));
+		Assert.assertEquals("(1)-[:REL {weight: 2}]-(2)", PrettyPrinter.toString(rel));
+		//System.out.println("Test: toStringRelationshipTest "+PrettyPrinter.toString(rel));
 	}
 
 	
