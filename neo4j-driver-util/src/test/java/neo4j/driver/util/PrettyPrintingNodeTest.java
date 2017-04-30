@@ -120,10 +120,10 @@ public class PrettyPrintingNodeTest {
 	
 	@Test
 	public void toStringPropertiesMapTest(){
+		//megnézzük, hogy a map értékeit hogy iratja ki
 		Map<String, Object> nodeProperties=new HashMap<>() ;
 		System.out.println("üres map-nél üres stringgel térünk vissza:" +PrettyPrinter.toString(nodeProperties));
 		nodeProperties= ImmutableMap.of("name", Values.value("John Doe"));
-		//Strinf wantedValue=
 		Assert.assertEquals("{name: \"John Doe\"}", PrettyPrinter.toString(nodeProperties));
 		System.out.println("test: toStringPropertiesMapTest"+PrettyPrinter.toString(nodeProperties));
 
