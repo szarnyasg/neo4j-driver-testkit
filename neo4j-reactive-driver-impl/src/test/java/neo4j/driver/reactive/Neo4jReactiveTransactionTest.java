@@ -45,8 +45,9 @@ public class Neo4jReactiveTransactionTest {
 			StatementResult statementResult = sessionDependentTransaction.run("MATCH (n:PetraPerson) RETURN [n]");
 			if (statementResult.hasNext()) {
 				Record record = statementResult.next();
-				System.out.println(PrettyPrinter.toString(record));
-				System.out.println("GOOD FAILURE TEST");
+				Assert.assertEquals("<[n]=[node<0>]>",PrettyPrinter.toString(record));
+				//System.out.println(PrettyPrinter.toString(record));
+				//System.out.println("GOOD FAILURE TEST");
 			}
 						
 		}catch (Exception e) {

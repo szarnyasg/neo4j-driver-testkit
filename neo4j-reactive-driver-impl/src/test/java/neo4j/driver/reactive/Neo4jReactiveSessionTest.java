@@ -50,7 +50,8 @@ public class Neo4jReactiveSessionTest
 		while (statementResult.hasNext()) {
 			Record record = statementResult.next();
 			System.out.println(PrettyPrinter.toString(record));
-			System.out.println("GOOD run(String s) test");
+			Assert.assertEquals("<n=(:Label)>", PrettyPrinter.toString(record));
+			//System.out.println("GOOD run(String s) test");
 		}
 	}
 	
