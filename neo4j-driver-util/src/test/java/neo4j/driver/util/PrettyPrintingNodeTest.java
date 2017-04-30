@@ -36,7 +36,9 @@ public class PrettyPrintingNodeTest {
 
 		Map<String, Value> relationshipProperties = ImmutableMap.of("", Values.value(2));
 		Relationship rel = new InternalRelationship(5, 1, 2, "REL", relationshipProperties);
-		System.out.println(PrettyPrinter.toString(rel));
+		//System.out.println("KI:"+PrettyPrinter.toString(rel));
+		
+		Assert.assertEquals("(1)-[:REL {: 2}]-(2)",PrettyPrinter.toString(rel));
 	}
 	
 	@Test
