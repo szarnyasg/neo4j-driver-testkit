@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.text.html.parser.Entity;
 
 import org.junit.Test;
 import org.neo4j.driver.internal.InternalNode;
+import org.neo4j.driver.internal.InternalPath;
 import org.neo4j.driver.internal.InternalRelationship;
-import org.neo4j.driver.v1.AccessMode;
+import org.neo4j.driver.internal.value.NodeValue;
+import org.neo4j.driver.internal.value.PathValue;
+import org.neo4j.driver.internal.value.RelationshipValue;
 import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
@@ -18,16 +20,15 @@ import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.driver.v1.Transaction;
 import org.neo4j.driver.v1.Value;
 import org.neo4j.driver.v1.Values;
+import org.neo4j.driver.v1.types.Entity;
 import org.neo4j.driver.v1.types.Node;
-import org.neo4j.driver.v1.types.Path;
 import org.neo4j.driver.v1.types.Relationship;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-
+import org.junit.Assert;
 import neo4j.driver.util.PrettyPrinter;
-import org.neo4j.driver.*;
 
 
 public class PrettyPrintingNodeTest {
@@ -56,6 +57,42 @@ public class PrettyPrintingNodeTest {
 		testList.add(new InternalNode(1,labels2,nodeProperties));
 		System.out.println("Test: toStringListTest "+PrettyPrinter.toString(testList));
 	}
+	@Test
+	public void toStringValueTestSimpleValue(){
+		Value value = Values.value(5000);
+		String valueString = PrettyPrinter.toString(value);
+		Assert.assertEquals(valueString,"5000");
+	}
+	@Test
+	public void toStringValueTestRelationshipValue(){
+		Map<String, Value> relationshipProperties = ImmutableMap.of("weight", Values.value(2));
+		RelationshipValue relationshipValue = new RelationshipValue(new InternalRelationship(5, 1, 2, "REL", relationshipProperties));
+		Assert.assertEquals("(1)-[:REL {weight: 2}]-(2)", PrettyPrinter.toString(relationshipValue));
+	}
+	@Test
+	public void toStringValueTestNodeValue(){
+		List<String> labels = ImmutableList.of("Person1");
+		Map<String, Value> nodeProperties = ImmutableMap.of("name", Values.value("John Doe"));
+		NodeValue nodeValue = new NodeValue(new InternalNode(1,labels,nodeProperties));
+		Assert.assertEquals(PrettyPrinter.toString(nodeValue), "(:Person1 {name: \"John Doe\"})");
+	}
+	/*@Test
+	public void toStringValuePathValueTest(){
+		PathValue pathValue = new PathValue(new InternalPath());
+		List<String> labels = ImmutableList.of("Person1");
+		Map<String, Value> nodeProperties = ImmutableMap.of("name", Values.value("John Doe"));
+		Entity entinity = new InternalNode(1, labels, nodeProperties);
+		
+		List<String> labels2 = ImmutableList.of("Person2");
+		Map<String, Value> nodeProperties2 = ImmutableMap.of("name", Values.value("Long John Silver"));
+		Entity entinity2 = new InternalNode(2, labels2, nodeProperties2);
+		List<Entity> entityList = new ArrayList<>();
+		entityList.add(entinity);
+		entityList.add(entinity2);
+		
+		InternalPath path = new InternalPath(entityList);
+		//TODO fix IllegalArgumentException
+	}*/
 	
 	@Test
 	public void toStringRelationshipTest(){
@@ -63,6 +100,7 @@ public class PrettyPrintingNodeTest {
 		Relationship rel = new InternalRelationship(5, 1, 2, "REL", relationshipProperties);
 		System.out.println("Test: toStringRelationshipTest "+PrettyPrinter.toString(rel));
 	}
+
 	
 	/*@Test
 	public void toStringRecordTest(){
@@ -78,9 +116,10 @@ public class PrettyPrintingNodeTest {
 						Record record = statementResult.next();
 						System.out.println(PrettyPrinter.toString(record));
 					}
+			driver.close();
 		
-		}
-	
+	}*/
+	/*
 	@Test (expected=UnsupportedOperationException.class )
 	public void toStringPathTest(){
 		Path p=new Path()
