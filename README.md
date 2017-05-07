@@ -33,7 +33,7 @@ Use the following command:
 ./gradlew upload
 ```
 
-Copy the files from the repository to wherever you'd like to deploy your artifacts.
+Copy the files from the repository to wherever you'd like to deploy your artifacts. Change
 
 ## License
 
