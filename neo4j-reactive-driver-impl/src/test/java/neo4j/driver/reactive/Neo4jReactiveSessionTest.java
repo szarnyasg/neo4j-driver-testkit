@@ -54,6 +54,20 @@ public class Neo4jReactiveSessionTest
 			//System.out.println("GOOD run(String s) test");
 		}
 	}
+
+	@Test
+	public void run2Test() {
+		Transaction transaction = session.beginTransaction();
+		Statement statement=new Statement("CREATE (n:Label)");
+		session.run(statement);
+		transaction.success();
+		StatementResult statementResult = session.run("MATCH (n:Label) RETURN n");
+		while (statementResult.hasNext()) {
+			Record record = statementResult.next();
+			System.out.println(PrettyPrinter.toString(record));
+			Assert.assertEquals("<n=(:Label)>", PrettyPrinter.toString(record));
+		}
+	}
 	
 	@Test
 	public void isEncryptedTest(){
