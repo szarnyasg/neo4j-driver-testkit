@@ -45,3 +45,4 @@ ingraph-cypxmi/
 internal/*.g
 *.xtextbin
 hs_err_pid*.log
+*.iml
