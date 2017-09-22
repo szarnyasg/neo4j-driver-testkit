@@ -120,18 +120,23 @@ public class Neo4jReactiveSession implements ReactiveSession {
 		final Transaction transaction = session.beginTransaction();
 		return new Neo4jReactiveTransaction(this, transaction);
 	}
-
-	@Override
+	/**
+	 * @deprecated
+	 */
+	@Deprecated @Override
 	public Transaction beginTransaction(String bookmark) {
-		return beginTransaction(bookmark);
+		final Transaction transaction = session.beginTransaction(bookmark);
+		return new Neo4jReactiveTransaction(this, transaction);
 	}
 
 	@Override
 	public String lastBookmark() {
 		return session.lastBookmark();
 	}
-
-	@Override
+	/**
+	 * @deprecated
+	 */
+	@Deprecated @Override
 	public void reset() {
 		session.reset();
 	}

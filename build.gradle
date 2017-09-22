@@ -1,3 +1,18 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.3"
+
+  }
+}
+
+apply plugin: "org.sonarqube"
+
+
 allprojects {
   group = 'neo4j-drivers'
   version = '0.0.5-SNAPSHOT'
@@ -9,11 +24,15 @@ ext {
   neo4jDriverVersion = '1.4.3'
   neo4jVersion = '3.2.4'
 }
-
 subprojects {
+
+  group 'org.jacoco'
+
   apply plugin: 'java'
+  apply plugin: 'jacoco'
   apply plugin: 'maven'
   apply plugin: 'maven-publish'
+  
 
   jar { from sourceSets.main.allJava }
 
@@ -22,6 +41,10 @@ subprojects {
 
   repositories {
     jcenter()
+	maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+    mavenCentral()
   }
 
   configurations.all { exclude group: 'asm' }
@@ -39,8 +62,21 @@ subprojects {
   		}
   	}
   }
-
   dependencies {
     testCompile group: 'junit', name: 'junit', version: junitVersion
   }
+  
+  jacoco {
+    toolVersion = "0.7.6.201602180812"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+  }
+  
+  jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+		html.destination "${buildDir}/jacocoHtml"
+    }
+ }
+ test { finalizedBy jacocoTestReport }
 }

@@ -41,11 +41,12 @@ public class EmbeddedTestkitDriver implements Driver {
 
 	@Override
 	public EmbeddedTestkitSession session(AccessMode mode) {
-		return new EmbeddedTestkitSession(gds, mode);
+		return new EmbeddedTestkitSession(gds);
 	}
 
 	@Override
 	public void close() {
+	//this method needs to be implemented
 	}
 
 	@Override
