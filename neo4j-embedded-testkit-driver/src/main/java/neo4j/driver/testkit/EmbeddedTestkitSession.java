@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.neo4j.driver.v1.AccessMode;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.Statement;
@@ -27,7 +26,7 @@ public class EmbeddedTestkitSession implements Session {
 	final Map<String, Multiset<Record>> queryResults = new HashMap<>();
 	final Map<String, Multiset<Record>> deltas = new HashMap<>();
 
-	public EmbeddedTestkitSession(GraphDatabaseService gds, AccessMode mode) {
+	public EmbeddedTestkitSession(GraphDatabaseService gds) {
 		this.gds = gds;
 	}
 
@@ -39,8 +38,8 @@ public class EmbeddedTestkitSession implements Session {
 	@Override
 	public StatementResult run(String statementTemplate, Map<String, Object> statementParameters) {
 		final Result internalResult = gds.execute(statementTemplate, statementParameters);
-		final EmbeddedTestkitStatementResult driverResult = new EmbeddedTestkitStatementResult(internalResult);
-		return driverResult;
+		return new EmbeddedTestkitStatementResult(internalResult);
+		
 	}
 
 	@Override
@@ -61,13 +60,13 @@ public class EmbeddedTestkitSession implements Session {
 	@Override
 	public StatementResult run(Statement statement) {
 		final Result internalResult = gds.execute(statement.text());
-		final EmbeddedTestkitStatementResult driverResult = new EmbeddedTestkitStatementResult(internalResult);
+		return new EmbeddedTestkitStatementResult(internalResult);
 
-		return driverResult;
+	
 	}
 
 	@Override
-	public TypeSystem typeSystem() {
+	public TypeSystem typeSystem(){
 		throw new UnsupportedOperationException("Typesystem is not supported.");
 	}
 
@@ -94,6 +93,7 @@ public class EmbeddedTestkitSession implements Session {
 
 	@Override
 	public void close() {
+	//this method needs to be implemented
 	}
 
 	@Override
