@@ -59,6 +59,18 @@ public class EmbeddedTestkitDriver implements Driver {
 		throw new UnsupportedOperationException("Bookmarks not supported.");
 	}
 
+	@Override
+	public Session session( Iterable<String> bookmarks )
+	{
+		throw new UnsupportedOperationException("Bookmarks not supported.");
+	}
+
+	@Override
+	public Session session( AccessMode mode, Iterable<String> bookmarks )
+	{
+		throw new UnsupportedOperationException("Bookmarks not supported.");
+	}
+
 	public GraphDatabaseService getUnderlyingDatabaseService() {
 		return gds;
 	}
